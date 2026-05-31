@@ -1,0 +1,20 @@
+{
+    "download" : {
+        
+        "dumps_base_url" : "https://dumps.wikimedia.org/other/mediawiki_content_current",
+        "dumps_languages" : [
+            "fr",
+            "en"
+        ],
+        "dumps_output" : "data/wikipedia_text_dumps",
+
+        "qlever_endpoint" : "https://qlever.cs.uni-freiburg.de/api/wikidata",
+        "qlever_batch_size" : 5000,
+
+        "peoples_output" : "data/wikidata_peoples_batches",
+        "topics_output" : "data/wikidata_topics_batches"
+    },
+    "transform" : {
+        "title_to_id_output" : "title_id_mapping.pickle"
+    }
+}
