@@ -1,1 +1,0 @@
-# This is the code of the streamlint front end (to present the results, vis, etc)

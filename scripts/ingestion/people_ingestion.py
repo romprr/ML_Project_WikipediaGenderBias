@@ -24,8 +24,10 @@ SELECT
   (SAMPLE(?raw_birthplace) AS ?birthplace)
   (SAMPLE(?raw_deathdate) AS ?deathdate)
   (SAMPLE(?raw_deathplace) AS ?deathplace)
-  (GROUP_CONCAT(DISTINCT ?raw_citizenship; separator="|") AS ?citizenships)
-  (GROUP_CONCAT(DISTINCT ?raw_occupation; separator="|") AS ?occupations)
+  (GROUP_CONCAT(DISTINCT STR(?raw_citizenship); SEPARATOR="|") AS ?citizenship_ids)
+  (GROUP_CONCAT(DISTINCT ?citizenship_label; SEPARATOR="|") AS ?citizenship_labels)
+  (GROUP_CONCAT(DISTINCT STR(?raw_occupation); SEPARATOR="|") AS ?occupation_ids)
+  (GROUP_CONCAT(DISTINCT ?occupation_label; SEPARATOR="|") AS ?occupation_labels)
   (SAMPLE(?raw_enwiki) AS ?enwiki)
   (SAMPLE(?raw_frwiki) AS ?frwiki)
 WHERE {{
@@ -67,8 +69,24 @@ WHERE {{
   OPTIONAL {{ ?person wdt:P19 ?raw_birthplace . }}
   OPTIONAL {{ ?person wdt:P570 ?raw_deathdate . }}
   OPTIONAL {{ ?person wdt:P20 ?raw_deathplace . }}
-  OPTIONAL {{ ?person wdt:P27 ?raw_citizenship . }}
-  OPTIONAL {{ ?person wdt:P106 ?raw_occupation . }}
+  
+  # Get Citizenship ID and its English label
+  OPTIONAL {{ 
+    ?person wdt:P27 ?raw_citizenship . 
+    OPTIONAL {{
+      ?raw_citizenship rdfs:label ?citizenship_label .
+      FILTER(LANG(?citizenship_label) = "en")
+    }}
+  }}
+  
+  # Get Occupation ID and its English label
+  OPTIONAL {{ 
+    ?person wdt:P106 ?raw_occupation . 
+    OPTIONAL {{
+      ?raw_occupation rdfs:label ?occupation_label .
+      FILTER(LANG(?occupation_label) = "en")
+    }}
+  }}
 }}
 GROUP BY ?person
 ORDER BY ?person
